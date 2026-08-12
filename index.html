@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>MSR · Registro 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --ink: #14171C;
+        --paper: #EFF1F4;
+        --surface: #FFFFFF;
+        --border: #E1E4E9;
+        --muted: #6B7280;
+    }
+    * { box-sizing: border-box; }
+    body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: 'IBM Plex Sans', -apple-system, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    /* header */
+    .masthead {
+        background: var(--ink);
+        color: #F5F6F8;
+        padding: 28px 32px 22px;
+    }
+    .masthead-top {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .wordmark {
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 13px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: #8B93A1;
+    }
+    .wordmark b { color: #F5F6F8; }
+    .masthead h1 {
+        margin: 6px 0 0;
+        font-size: 26px;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+    }
+    .masthead p {
+        margin: 6px 0 0;
+        font-size: 13px;
+        color: #A6AEBB;
+    }
+    .masthead a { color: #A6AEBB; }
+
+    /* stat strip */
+    .stats {
+        display: flex;
+        gap: 1px;
+        background: var(--border);
+        border-bottom: 1px solid var(--border);
+    }
+    .stat {
+        flex: 1;
+        background: var(--surface);
+        padding: 14px 20px;
+    }
+    .stat .n {
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 22px;
+        font-weight: 600;
+    }
+    .stat .l {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+        margin-top: 2px;
+    }
+    .stat.done .n { color: #0F7B6C; }
+    .stat.progress .n { color: #C17817; }
+    .stat.todo .n { color: #6B7280; }
+
+    /* timeline */
+    .timeline-outer {
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding: 0 0 24px;
+        -webkit-overflow-scrolling: touch;
+    }
+    .timeline-hint {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 16px 32px 0;
+        font-size: 11px;
+        color: var(--muted);
+        font-family: 'IBM Plex Mono', monospace;
+        letter-spacing: 0.02em;
+    }
+    .timeline {
+        position: relative;
+        display: flex;
+        align-items: center;
+        height: 560px;
+        min-width: max-content;
+        padding: 0 60px;
+        margin-top: 8px;
+    }
+    .timeline::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 50%;
+        height: 2px;
+        background: var(--border);
+        transform: translateY(-50%);
+        z-index: 0;
+    }
+    .t-item {
+        position: relative;
+        width: 240px;
+        height: 100%;
+        flex-shrink: 0;
+        margin-right: 30px;
+        z-index: 1;
+    }
+    .t-node {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: var(--accent);
+        border: 3px solid var(--paper);
+        box-shadow: 0 0 0 1px var(--accent);
+        transform: translate(-50%, -50%);
+        z-index: 2;
+    }
+    .t-date-marker {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 10.5px;
+        font-weight: 600;
+        color: var(--muted);
+        white-space: nowrap;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+    .t-stem {
+        position: absolute;
+        left: 50%;
+        width: 2px;
+        background: var(--accent);
+        opacity: 0.45;
+        transform: translateX(-50%);
+    }
+    .t-item.above .t-date-marker { top: calc(50% + 12px); }
+    .t-item.above .t-stem { bottom: calc(50% + 5px); height: 22px; }
+    .t-item.above .t-card { position: absolute; bottom: calc(50% + 27px); left: 50%; transform: translateX(-50%); }
+    .t-item.below .t-date-marker { bottom: calc(50% + 12px); }
+    .t-item.below .t-stem { top: calc(50% + 5px); height: 22px; }
+    .t-item.below .t-card { position: absolute; top: calc(50% + 27px); left: 50%; transform: translateX(-50%); }
+
+    .entry {
+        width: 240px;
+        display: block;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-top: 3px solid var(--accent);
+        border-radius: 4px;
+        overflow: hidden;
+        transition: box-shadow .15s ease, transform .15s ease;
+    }
+    .entry:hover {
+        box-shadow: 0 4px 14px rgba(20,23,28,0.1);
+    }
+    .entry-body {
+        padding: 11px 13px 12px;
+        min-width: 0;
+    }
+    .entry-top {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+    .key {
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--ink);
+        background: var(--paper);
+        padding: 2px 7px;
+        border-radius: 3px;
+        border: 1px solid var(--border);
+    }
+    .tag {
+        font-size: 10.5px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        padding: 2px 7px;
+        border-radius: 3px;
+        color: var(--muted);
+        border: 1px solid var(--border);
+    }
+    .tag-priority { color: var(--pc); border-color: var(--pc); }
+    .status {
+        margin-left: auto;
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--accent);
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    .status::before {
+        content: '';
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--accent);
+        display: inline-block;
+    }
+    .entry-title {
+        margin: 8px 0 7px;
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1.32;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    .entry-title a {
+        color: var(--ink);
+        text-decoration: none;
+    }
+    .entry-title a:hover { color: #2B5F8A; text-decoration: underline; }
+    .entry-meta {
+        font-size: 11px;
+        color: var(--muted);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+    .meta-label {
+        text-transform: uppercase;
+        font-size: 9.5px;
+        letter-spacing: 0.06em;
+        color: #9AA1AC;
+        margin-right: 5px;
+    }
+    .meta-sep { color: #C4C9D1; }
+    .entry-dates {
+        margin-top: 8px;
+        display: flex;
+        gap: 16px;
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 11px;
+        color: #9AA1AC;
+    }
+    .entry-dates time.is-2026 {
+        color: #2B5F8A;
+        font-weight: 600;
+    }
+
+    footer {
+        text-align: center;
+        font-size: 11px;
+        color: var(--muted);
+        padding: 0 0 32px;
+    }
+</style>
+</head>
+<body>
+
+<div class="masthead">
+    <div class="masthead-top">
+        <span class="wordmark"><b>Jira</b> / Proyecto MSR</span>
+    </div>
+    <h1>Hitos clave 2025 – 2026</h1>
+    <p>12 hitos — un elemento representativo por mes</p>
+</div>
+
+<div class="stats">
+    <div class="stat done"><div class="n">5</div><div class="l">Finalizadas</div></div>
+    <div class="stat progress"><div class="n">3</div><div class="l">En curso</div></div>
+    <div class="stat todo"><div class="n">4</div><div class="l">Por hacer</div></div>
+</div>
+
+<div class="timeline-hint">← desplázate horizontalmente para ver toda la línea de tiempo →</div>
+<div class="timeline-outer">
+<div class="timeline">
+
+    <div class="t-item above" style="--accent: #0F7B6C;">
+        <div class="t-card">
+        <article class="entry">
+            <div class="entry-body">
+                <div class="entry-top">
+                    <span class="key">MSR-XX</span>
+                    <span class="tag tag-type">Tarea</span>
+                    <span class="tag tag-priority" style="--pc: #0F7B6C;">Medium</span>
+                </div>
+                <span class="status" style="--accent: #0F7B6C;">Desarrollo/Correcciones</span>
+                <h3 class="entry-title"><a href="https://daparrag.atlassian.net/browse/MSR-XX" target="_blank">MSI Rediseño UI UX Look and Feel</a></h3>
+                <div class="entry-meta">
+                    <span class="meta-item"><span class="meta-label">Informador</span>Alejandro Antonio Flores Lagos</span>
+                    <span class="meta-sep">→</span>
+                    <span class="meta-item"><span class="meta-label">Asignado</span>Sin asignar</span>
+                </div>
+                <div class="entry-dates">
+                    <time class="">creada · 27/mar/25</time>
+                    <time class="is-2026">act. · 15/may/26</time>
+                </div>
+            </div>
+        </article>
+        </div>
+        <div class="t-stem"></div>
+        <div class="t-node"></div>
+        <div class="t-date-marker">mar 2025</div>
+    </div>  
+
+    <div class="t-item below" style="--accent: #0F7B6C;">
+        <div class="t-card">
+        <article class="entry">
+            <div class="entry-body">
+                <div class="entry-top">
+                    <span class="key">MSR-86</span>
+                    <span class="tag tag-type">Tarea</span>
+                    <span class="tag tag-priority" style="--pc: #B3261E;">Highest</span>
+                </div>
+                <span class="status" style="--accent: #0F7B6C;">Finalizada</span>
+                <h3 class="entry-title"><a href="https://daparrag.atlassian.net/browse/MSR-86" target="_blank">MSI Editor HTML</a></h3>
+                <div class="entry-meta">
+                    <span class="meta-item"><span class="meta-label">Informador</span>Daniel Ramirez Pérez</span>
+                    <span class="meta-sep">→</span>
+                    <span class="meta-item"><span class="meta-label">Asignado</span>Daniel Ramirez Pérez</span>
+                </div>
+                <div class="entry-dates">
+                    <time class="">creada · 04/oct/25</time>
+                    <time class="is-2026">act. · 10/abr/26</time>
+                </div>
+            </div>
+        </article>
+        </div>
+        <div class="t-stem"></div>
+        <div class="t-node"></div>
+        <div class="t-date-marker">oct 2025</div>
+    </div>
+
+    <div class="t-item below" style="--accent: #0F7B6C;">
+        <div class="t-card">
+        <article class="entry">
+            <div class="entry-body">
+                <div class="entry-top">
+                    <span class="key">MSR-42</span>
+                    <span class="tag tag-type">Tarea</span>
+                    <span class="tag tag-priority" style="--pc: #B3261E;">Highest</span>
+                </div>
+                <span class="status" style="--accent: #0F7B6C;">Finalizada</span>
+                <h3 class="entry-title"><a href="https://daparrag.atlassian.net/browse/MSR-42" target="_blank">MSI445 personalizacion formularios</a></h3>
+                <div class="entry-meta">
+                    <span class="meta-item"><span class="meta-label">Informador</span>Alejandro Antonio Flores Lagos</span>
+                    <span class="meta-sep">→</span>
+                    <span class="meta-item"><span class="meta-label">Asignado</span>Sin asignar</span>
+                </div>
+                <div class="entry-dates">
+                    <time class="">creada · 17/nov/25</time>
+                    <time class="is-2026">act. · 20/may/26</time>
+                </div>
+            </div>
+        </article>
+        </div>
+        <div class="t-stem"></div>
+        <div class="t-node"></div>
+        <div class="t-date-marker">nov 2025</div>
+    </div>
+
+    <div class="t-item above" style="--accent: #0F7B6C;">
+        <div class="t-card">
+        <article class="entry">
+            <div class="entry-body">
+                <div class="entry-top">
+                    <span class="key">MSR-73</span>
+                    <span class="tag tag-type">Tarea</span>
+                    <span class="tag tag-priority" style="--pc: #C17817;">Medium</span>
+                </div>
+                <span class="status" style="--accent: #0F7B6C;">Finalizada</span>
+                <h3 class="entry-title"><a href="https://daparrag.atlassian.net/browse/MSR-73" target="_blank">MSI470 (Plat. Hallzgos, recurrente)</a></h3>
+                <div class="entry-meta">
+                    <span class="meta-item"><span class="meta-label">Informador</span>Alejandro Flores Lagos</span>
+                    <span class="meta-sep">→</span>
+                    <span class="meta-item"><span class="meta-label">Asignado</span>Sin asignar</span>
+                </div>
+                <div class="entry-dates">
+                    <time class="">creada · 12/ene/26</time>
+                    <time class="is-2026">act. · 10/feb/26</time>
+                </div>
+            </div>
+        </article>
+        </div>
+        <div class="t-stem"></div>
+        <div class="t-node"></div>
+        <div class="t-date-marker">ene 2026</div>
+    </div>
+
+    <div class="t-item above" style="--accent: #0F7B6C;">
+        <div class="t-card">
+        <article class="entry">
+            <div class="entry-body">
+                <div class="entry-top">
+                    <span class="key">MSR-95</span>
+                    <span class="tag tag-type">Tarea</span>
+                    <span class="tag tag-priority" style="--pc: #C17817;">Medium</span>
+                </div>
+                <span class="status" style="--accent: #0F7B6C;">Finalizada</span>
+                <h3 class="entry-title"><a href="https://daparrag.atlassian.net/browse/MSR-95" target="_blank">RI-011 Mensaje de error carga programacion</a></h3>
+                <div class="entry-meta">
+                    <span class="meta-item"><span class="meta-label">Informador</span>Alejandro Flores Lagos</span>
+                    <span class="meta-sep">→</span>
+                    <span class="meta-item"><span class="meta-label">Asignado</span>Sin asignar</span>
+                </div>
+                <div class="entry-dates">
+                    <time class="is-2026">creada · 15/ene/26</time>
+                    <time class="is-2026">act. · 02/feb/26</time>
+                </div>
+            </div>
+        </article>
+        </div>
+        <div class="t-stem"></div>
+        <div class="t-node"></div>
+        <div class="t-date-marker">feb 2026</div>
+    </div>
+
+    <div class="t-item below" style="--accent: #C17817;">
+        <div class="t-card">
+        <article class="entry">
+            <div class="entry-body">
+                <div class="entry-top">
+                    <span class="key">MSR-XX</span>
+                    <span class="tag tag-type">Tarea</span>
+                    <span class="tag tag-priority" style="--pc: #C17817;">Medium</span>
+                </div>
+                <span class="status" style="--accent: #C17817;">Desarrollo/Correcciones</span>
+                <h3 class="entry-title"><a href="https://daparrag.atlassian.net/browse/MSR-XX" target="_blank">MSI Mejora Sincronizacion Modo Offline</a></h3>
+                <div class="entry-meta">
+                    <span class="meta-item"><span class="meta-label">Informador</span>Alejandro Antonio Flores Lagos</span>
+                    <span class="meta-sep">→</span>
+                    <span class="meta-item"><span class="meta-label">Asignado</span>Sin asignar</span>
+                </div>
+                <div class="entry-dates">
+                    <time class="">creada · 22/mar/26</time>
+                    <time class="is-2026">act. · 22/ago/26</time>
+                </div>
+            </div>
+        </article>
+        </div>
+        <div class="t-stem"></div>
+        <div class="t-node"></div>
+        <div class="t-date-marker">mar 2026</div>
+    </div>
+
+
+    <div class="t-item above" style="--accent: #0F7B6C;">
+        <div class="t-card">
+        <article class="entry">
+            <div class="entry-body">
+                <div class="entry-top">
+                    <span class="key">MSR-78</span>
+                    <span class="tag tag-type">Tarea</span>
+                    <span class="tag tag-priority" style="--pc: #C17817;">Medium</span>
+                </div>
+                <span class="status" style="--accent: #0F7B6C;">Finalizada</span>
+                <h3 class="entry-title"><a href="https://daparrag.atlassian.net/browse/MSR-78" target="_blank">En Crear modulo, asignar automáticamente campos Contrato R&amp;Q y eliminar de vista de formulario.</a></h3>
+                <div class="entry-meta">
+                    <span class="meta-item"><span class="meta-label">Informador</span>Alejandro Flores Lagos</span>
+                    <span class="meta-sep">→</span>
+                    <span class="meta-item"><span class="meta-label">Asignado</span>Sin asignar</span>
+                </div>
+                <div class="entry-dates">
+                    <time class="">creada · 26/jun/26</time>
+                    <time class="is-2026">act. · 10/jul/26</time>
+                </div>
+            </div>
+        </article>
+        </div>
+        <div class="t-stem"></div>
+        <div class="t-node"></div>
+        <div class="t-date-marker">jun 2026</div>
+    </div>
+
+    <div class="t-item below" style="--accent: #C17817;">
+        <div class="t-card">
+        <article class="entry">
+            <div class="entry-body">
+                <div class="entry-top">
+                    <span class="key">MSR-65</span>
+                    <span class="tag tag-type">Tarea</span>
+                    <span class="tag tag-priority" style="--pc: #C17817;">Medium</span>
+                </div>
+                <span class="status" style="--accent: #C17817;">Desarrollo/Correcciones</span>
+                <h3 class="entry-title"><a href="https://daparrag.atlassian.net/browse/MSR-65" target="_blank">MSI459 Update ELLIPSE</a></h3>
+                <div class="entry-meta">
+                    <span class="meta-item"><span class="meta-label">Informador</span>Alejandro Flores Lagos</span>
+                    <span class="meta-sep">→</span>
+                    <span class="meta-item"><span class="meta-label">Asignado</span>Sin asignar</span>
+                </div>
+                <div class="entry-dates">
+                    <time class="">creada · 14/jul/26</time>
+                    <time class="is-2026">act. · En progreso</time>
+                </div>
+            </div>
+        </article>
+        </div>
+        <div class="t-stem"></div>
+        <div class="t-node"></div>
+        <div class="t-date-marker">jul 2026</div>
+    </div>
+
+
+    <div class="t-item above" style="--accent: #6B7280;">
+        <div class="t-card">
+        <article class="entry">
+            <div class="entry-body">
+                <div class="entry-top">
+                    <span class="key">MSR-XX</span>
+                    <span class="tag tag-type">Tarea</span>
+                    <span class="tag tag-priority" style="--pc: #6B7280;">Medium</span>
+                </div>
+                <span class="status" style="--accent: #6B7280;">Por hacer</span>
+                <h3 class="entry-title"><a href="https://daparrag.atlassian.net/browse/MSR-XX" target="_blank">Carga múltiple de imágenes</a></h3>
+                <div class="entry-meta">
+                    <span class="meta-item"><span class="meta-label">Informador</span>Alejandro Antonio Flores Lagos</span>
+                    <span class="meta-sep">→</span>
+                    <span class="meta-item"><span class="meta-label">Asignado</span>Sin asignar</span>
+                </div>
+                <div class="entry-dates">
+                    <time class="">planificada · ago/26</time>
+                    <time class="">act. · Por hacer</time>
+                </div>
+            </div>
+        </article>
+        </div>
+        <div class="t-stem"></div>
+        <div class="t-node"></div>
+        <div class="t-date-marker">ago 2026</div>
+    </div>
+
+    <div class="t-item below" style="--accent: #6B7280;">
+        <div class="t-card">
+        <article class="entry">
+            <div class="entry-body">
+                <div class="entry-top">
+                    <span class="key">MSR-XX</span>
+                    <span class="tag tag-type">Tarea</span>
+                    <span class="tag tag-priority" style="--pc: #6B7280;">Medium</span>
+                </div>
+                <span class="status" style="--accent: #6B7280;">Por hacer</span>
+                <h3 class="entry-title"><a href="https://daparrag.atlassian.net/browse/MSR-XX" target="_blank">Agregar imágenes a módulos (Alertas, Observaciones, Equipos, Dotación)</a></h3>
+                <div class="entry-meta">
+                    <span class="meta-item"><span class="meta-label">Informador</span>Alejandro Antonio Flores Lagos</span>
+                    <span class="meta-sep">→</span>
+                    <span class="meta-item"><span class="meta-label">Asignado</span>Sin asignar</span>
+                </div>
+                <div class="entry-dates">
+                    <time class="">planificada · sep/26</time>
+                    <time class="">act. · Por hacer</time>
+                </div>
+            </div>
+        </article>
+        </div>
+        <div class="t-stem"></div>
+        <div class="t-node"></div>
+        <div class="t-date-marker">sep 2026</div>
+    </div>
+
+    <div class="t-item above" style="--accent: #6B7280;">
+        <div class="t-card">
+        <article class="entry">
+            <div class="entry-body">
+                <div class="entry-top">
+                    <span class="key">MSR-XX</span>
+                    <span class="tag tag-type">Tarea</span>
+                    <span class="tag tag-priority" style="--pc: #6B7280;">Medium</span>
+                </div>
+                <span class="status" style="--accent: #6B7280;">Por hacer</span>
+                <h3 class="entry-title"><a href="https://daparrag.atlassian.net/browse/MSR-XX" target="_blank">Disposición de imágenes en registros</a></h3>
+                <div class="entry-meta">
+                    <span class="meta-item"><span class="meta-label">Informador</span>Alejandro Antonio Flores Lagos</span>
+                    <span class="meta-sep">→</span>
+                    <span class="meta-item"><span class="meta-label">Asignado</span>Sin asignar</span>
+                </div>
+                <div class="entry-dates">
+                    <time class="">planificada · oct/26</time>
+                    <time class="">act. · Por hacer</time>
+                </div>
+            </div>
+        </article>
+        </div>
+        <div class="t-stem"></div>
+        <div class="t-node"></div>
+        <div class="t-date-marker">oct 2026</div>
+    </div>
+
+    <div class="t-item below" style="--accent: #6B7280;">
+        <div class="t-card">
+        <article class="entry">
+            <div class="entry-body">
+                <div class="entry-top">
+                    <span class="key">MSR-XX</span>
+                    <span class="tag tag-type">Tarea</span>
+                    <span class="tag tag-priority" style="--pc: #6B7280;">Medium</span>
+                </div>
+                <span class="status" style="--accent: #6B7280;">Por hacer</span>
+                <h3 class="entry-title"><a href="https://daparrag.atlassian.net/browse/MSR-XX" target="_blank">Envío de URL reportes alta calidad</a></h3>
+                <div class="entry-meta">
+                    <span class="meta-item"><span class="meta-label">Informador</span>Alejandro Antonio Flores Lagos</span>
+                    <span class="meta-sep">→</span>
+                    <span class="meta-item"><span class="meta-label">Asignado</span>Sin asignar</span>
+                </div>
+                <div class="entry-dates">
+                    <time class="">planificada · nov/26</time>
+                    <time class="">act. · Por hacer</time>
+                </div>
+            </div>
+        </article>
+        </div>
+        <div class="t-stem"></div>
+        <div class="t-node"></div>
+        <div class="t-date-marker">nov 2026</div>
+    </div>
+
+</div>
+</div>
+
+<footer>· un hito representativo por mes · orden cronológico por fecha de creación</footer>
+
+</body>
+</html>
