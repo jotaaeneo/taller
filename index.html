@@ -280,6 +280,53 @@
         color: var(--muted);
         padding: 0 0 32px;
     }
+
+    /* tooltip popup */
+    .tooltip {
+        position: fixed;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 12px 14px;
+        font-size: 12px;
+        line-height: 1.5;
+        max-width: 320px;
+        box-shadow: 0 8px 24px rgba(20,23,28,0.15);
+        pointer-events: none;
+        z-index: 9999;
+        opacity: 0;
+        transform: translateY(-8px);
+        transition: opacity .2s ease, transform .2s ease;
+        white-space: normal;
+    }
+    .tooltip.active {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    .tooltip-title {
+        font-weight: 600;
+        color: var(--ink);
+        margin-bottom: 6px;
+    }
+    .tooltip-row {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 4px;
+    }
+    .tooltip-row:last-child {
+        margin-bottom: 0;
+    }
+    .tooltip-label {
+        font-weight: 600;
+        color: var(--muted);
+        min-width: 70px;
+        text-transform: uppercase;
+        font-size: 10px;
+        letter-spacing: 0.04em;
+    }
+    .tooltip-value {
+        color: var(--ink);
+    }
 </style>
 </head>
 <body>
@@ -304,7 +351,7 @@
 
     <div class="t-item above" style="--accent: #0F7B6C;">
         <div class="t-card">
-        <article class="entry">
+        <article class="entry" data-resumen="Mejora integral de la interfaz de usuario y experiencia de diseño del sistema. Incluye actualizaciones visuales, optimización de componentes y coherencia en el diseño.">
             <div class="entry-body">
                 <div class="entry-top">
                     <span class="key">MSR-XX</span>
@@ -332,7 +379,7 @@
 
     <div class="t-item below" style="--accent: #0F7B6C;">
         <div class="t-card">
-        <article class="entry">
+        <article class="entry" data-resumen="Editor de contenido HTML avanzado que permite crear y editar contenido web directamente. Incluye validación y previsualización en tiempo real.">
             <div class="entry-body">
                 <div class="entry-top">
                     <span class="key">MSR-86</span>
@@ -360,7 +407,7 @@
 
     <div class="t-item below" style="--accent: #0F7B6C;">
         <div class="t-card">
-        <article class="entry">
+        <article class="entry" data-resumen="Sistema de personalización de formularios que permite configurar campos, validaciones y comportamientos según las necesidades específicas de cada módulo.">
             <div class="entry-body">
                 <div class="entry-top">
                     <span class="key">MSR-42</span>
@@ -388,7 +435,7 @@
 
     <div class="t-item above" style="--accent: #0F7B6C;">
         <div class="t-card">
-        <article class="entry">
+        <article class="entry" data-resumen="Plataforma de hallazgos y auditoría con capacidad de gestión recurrente. Permite registrar y dar seguimiento a observaciones de forma sistemática.">
             <div class="entry-body">
                 <div class="entry-top">
                     <span class="key">MSR-73</span>
@@ -416,7 +463,7 @@
 
     <div class="t-item above" style="--accent: #0F7B6C;">
         <div class="t-card">
-        <article class="entry">
+        <article class="entry" data-resumen="Mejora en la gestión de mensajes de error durante la carga de programaciones. Proporciona retroalimentación clara y soluciones al usuario.">
             <div class="entry-body">
                 <div class="entry-top">
                     <span class="key">MSR-95</span>
@@ -444,7 +491,7 @@
 
     <div class="t-item below" style="--accent: #C17817;">
         <div class="t-card">
-        <article class="entry">
+        <article class="entry" data-resumen="Mejora en la sincronización de datos cuando la aplicación funciona sin conexión a internet. Garantiza que los cambios se conserven y sincronicen correctamente.">
             <div class="entry-body">
                 <div class="entry-top">
                     <span class="key">MSR-XX</span>
@@ -473,7 +520,7 @@
 
     <div class="t-item above" style="--accent: #0F7B6C;">
         <div class="t-card">
-        <article class="entry">
+        <article class="entry" data-resumen="Automatización de asignación de campos de contrato R&Q al crear módulos. Mejora la eficiencia eliminando pasos manuales innecesarios.">
             <div class="entry-body">
                 <div class="entry-top">
                     <span class="key">MSR-78</span>
@@ -501,7 +548,7 @@
 
     <div class="t-item below" style="--accent: #C17817;">
         <div class="t-card">
-        <article class="entry">
+        <article class="entry" data-resumen="Actualización del sistema ELLIPSE para mejorar compatibilidad e integración. Incluye corrección de errores y mejora de rendimiento.">
             <div class="entry-body">
                 <div class="entry-top">
                     <span class="key">MSR-65</span>
@@ -530,7 +577,7 @@
 
     <div class="t-item above" style="--accent: #6B7280;">
         <div class="t-card">
-        <article class="entry">
+        <article class="entry" data-resumen="Funcionalidad de carga múltiple de imágenes. Permite a los usuarios subir varios archivos de una sola vez con validación y procesamiento en lote.">
             <div class="entry-body">
                 <div class="entry-top">
                     <span class="key">MSR-XX</span>
@@ -558,7 +605,7 @@
 
     <div class="t-item below" style="--accent: #6B7280;">
         <div class="t-card">
-        <article class="entry">
+        <article class="entry" data-resumen="Integración de capacidad de carga de imágenes en módulos principales: Alertas, Observaciones, Equipos y Dotación. Mejora la documentación visual.">
             <div class="entry-body">
                 <div class="entry-top">
                     <span class="key">MSR-XX</span>
@@ -586,7 +633,7 @@
 
     <div class="t-item above" style="--accent: #6B7280;">
         <div class="t-card">
-        <article class="entry">
+        <article class="entry" data-resumen="Definición del layout y disposición de imágenes en registros. Establece estándares visuales y de presentación para consistencia.">
             <div class="entry-body">
                 <div class="entry-top">
                     <span class="key">MSR-XX</span>
@@ -614,7 +661,7 @@
 
     <div class="t-item below" style="--accent: #6B7280;">
         <div class="t-card">
-        <article class="entry">
+        <article class="entry" data-resumen="Distribución de enlaces para descargar reportes en alta calidad. Facilita el acceso a documentación profesional generada por el sistema.">
             <div class="entry-body">
                 <div class="entry-top">
                     <span class="key">MSR-XX</span>
@@ -645,5 +692,125 @@
 
 <footer>· un hito representativo por mes · orden cronológico por fecha de creación</footer>
 
+<script>
+// Tooltip functionality
+const tooltip = document.createElement('div');
+tooltip.className = 'tooltip';
+document.body.appendChild(tooltip);
+
+let tooltipTimeout;
+
+function showTooltip(element, event) {
+    clearTimeout(tooltipTimeout);
+    
+    const entry = element.closest('.entry');
+    if (!entry) return;
+    
+    // Obtener datos del elemento
+    const keyEl = entry.querySelector('.key');
+    const titleEl = entry.querySelector('.entry-title a');
+    const statusEl = entry.querySelector('.status');
+    const metaItems = entry.querySelectorAll('.meta-item');
+    const dates = entry.querySelectorAll('.entry-dates time');
+    const resumen = entry.getAttribute('data-resumen');
+    
+    // Construir contenido del tooltip
+    let content = '';
+    if (keyEl) content += `<div class="tooltip-title">${keyEl.textContent}</div>`;
+    if (titleEl) content += `<div class="tooltip-title" style="font-size: 11px; font-weight: 500; color: var(--ink);">${titleEl.textContent}</div>`;
+    
+    // Mostrar resumen si existe
+    if (resumen) {
+        content += `<div style="border-top: 1px solid var(--border); padding-top: 6px; margin-top: 6px; margin-bottom: 6px;">
+            <div class="tooltip-value" style="font-size: 11px; line-height: 1.4; color: var(--muted);">${resumen}</div>
+        </div>`;
+    }
+    
+    if (statusEl) {
+        content += `<div class="tooltip-row">
+            <span class="tooltip-label">Estado</span>
+            <span class="tooltip-value">${statusEl.textContent.trim()}</span>
+        </div>`;
+    }
+    
+    metaItems.forEach(item => {
+        const label = item.querySelector('.meta-label');
+        const value = item.textContent.replace(label.textContent, '').trim();
+        if (label && value) {
+            content += `<div class="tooltip-row">
+                <span class="tooltip-label">${label.textContent}</span>
+                <span class="tooltip-value">${value}</span>
+            </div>`;
+        }
+    });
+    
+    if (dates.length > 0) {
+        content += `<div style="border-top: 1px solid var(--border); padding-top: 6px; margin-top: 6px;">`;
+        dates.forEach(date => {
+            content += `<div class="tooltip-row">
+                <span class="tooltip-value" style="font-size: 11px;">${date.textContent}</span>
+            </div>`;
+        });
+        content += `</div>`;
+    }
+    
+    tooltip.innerHTML = content;
+    tooltip.classList.add('active');
+    
+    // Posicionar el tooltip
+    const rect = element.getBoundingClientRect();
+    let left = event.clientX + 10;
+    let top = event.clientY + 10;
+    
+    // Ajustar si se sale de la pantalla
+    setTimeout(() => {
+        const tooltipRect = tooltip.getBoundingClientRect();
+        if (left + tooltipRect.width > window.innerWidth) {
+            left = event.clientX - tooltipRect.width - 10;
+        }
+        if (top + tooltipRect.height > window.innerHeight) {
+            top = event.clientY - tooltipRect.height - 10;
+        }
+        tooltip.style.left = left + 'px';
+        tooltip.style.top = top + 'px';
+    }, 0);
+}
+
+function hideTooltip() {
+    clearTimeout(tooltipTimeout);
+    tooltipTimeout = setTimeout(() => {
+        tooltip.classList.remove('active');
+    }, 100);
+}
+
+// Agregar listeners a todos los elementos
+document.querySelectorAll('.entry').forEach(entry => {
+    entry.addEventListener('mouseenter', (e) => showTooltip(entry, e));
+    entry.addEventListener('mousemove', (e) => {
+        // Actualizar posición mientras se mueve
+        const rect = entry.getBoundingClientRect();
+        if (tooltip.classList.contains('active')) {
+            let left = e.clientX + 10;
+            let top = e.clientY + 10;
+            
+            const tooltipRect = tooltip.getBoundingClientRect();
+            if (left + tooltipRect.width > window.innerWidth) {
+                left = e.clientX - tooltipRect.width - 10;
+            }
+            if (top + tooltipRect.height > window.innerHeight) {
+                top = e.clientY - tooltipRect.height - 10;
+            }
+            tooltip.style.left = left + 'px';
+            tooltip.style.top = top + 'px';
+        }
+    });
+    entry.addEventListener('mouseleave', hideTooltip);
+});
+
+// Ocultar tooltip al desplazarse
+document.querySelector('.timeline-outer').addEventListener('scroll', () => {
+    tooltip.classList.remove('active');
+});
+</script>
 </body>
 </html>
