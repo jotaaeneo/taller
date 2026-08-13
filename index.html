@@ -274,6 +274,105 @@
         font-weight: 600;
     }
 
+    .video-actions {
+        margin-top: 12px;
+    }
+    .video-trigger {
+        appearance: none;
+        border: 1px solid #14171C;
+        background: #14171C;
+        color: #F5F6F8;
+        border-radius: 999px;
+        padding: 8px 14px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+    .video-trigger:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 8px 18px rgba(20,23,28,0.18);
+        background: #2a2f36;
+    }
+    .video-trigger:focus-visible {
+        outline: 2px solid #0F7B6C;
+        outline-offset: 2px;
+    }
+    .video-trigger::before {
+        content: '▶';
+        font-size: 10px;
+        display: inline-block;
+    }
+
+    .video-modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(20, 23, 28, 0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.2s ease, visibility 0.2s ease;
+        z-index: 9999;
+    }
+    .video-modal.open {
+        opacity: 1;
+        visibility: visible;
+    }
+    .video-panel {
+        width: min(900px, 92vw);
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 30px 60px rgba(20,23,28,0.28);
+    }
+    .video-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 14px 18px;
+        border-bottom: 1px solid var(--border);
+        background: #F7F8FA;
+    }
+    .video-title {
+        margin: 0;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--ink);
+    }
+    .video-close {
+        border: none;
+        background: transparent;
+        color: var(--ink);
+        font-size: 28px;
+        line-height: 1;
+        cursor: pointer;
+        padding: 0 4px;
+    }
+    .video-close:hover {
+        color: var(--muted);
+    }
+    .video-shell {
+        padding: 0;
+    }
+    .video-shell video {
+        display: block;
+        width: 100%;
+        max-height: 72vh;
+        background: #000;
+    }
+
     footer {
         text-align: center;
         font-size: 11px;
@@ -358,7 +457,7 @@
                     <span class="tag tag-type">Tarea</span>
                     <span class="tag tag-priority" style="--pc: #0F7B6C;">Medium</span>
                 </div>
-                <span class="status" style="--accent: #0F7B6C;">Desarrollo/Correcciones</span>
+                <span class="status" style="--accent: #0F7B6C;">Finalizado</span>
                 <h3 class="entry-title"><a href="https://daparrag.atlassian.net/browse/MSR-XX" target="_blank">MSI Rediseño UI UX Look and Feel</a></h3>
                 <div class="entry-meta">
                     <span class="meta-item"><span class="meta-label">Informador</span>Alejandro Antonio Flores Lagos</span>
@@ -368,6 +467,9 @@
                 <div class="entry-dates">
                     <time class="">creada · 27/mar/25</time>
                     <time class="is-2026">act. · 15/may/26</time>
+                </div>
+                <div class="video-actions">
+                    <button class="video-trigger" type="button" id="videoTrigger">Ver video</button>
                 </div>
             </div>
         </article>
@@ -386,7 +488,7 @@
                     <span class="tag tag-type">Tarea</span>
                     <span class="tag tag-priority" style="--pc: #B3261E;">Highest</span>
                 </div>
-                <span class="status" style="--accent: #0F7B6C;">Finalizada</span>
+                <span class="status" style="--accent: #0F7B6C;">Finalizado</span>
                 <h3 class="entry-title"><a href="https://daparrag.atlassian.net/browse/MSR-86" target="_blank">MSI Editor HTML</a></h3>
                 <div class="entry-meta">
                     <span class="meta-item"><span class="meta-label">Informador</span>Daniel Ramirez Pérez</span>
@@ -414,7 +516,7 @@
                     <span class="tag tag-type">Tarea</span>
                     <span class="tag tag-priority" style="--pc: #B3261E;">Highest</span>
                 </div>
-                <span class="status" style="--accent: #0F7B6C;">Finalizada</span>
+                <span class="status" style="--accent: #0F7B6C;">Finalizado</span>
                 <h3 class="entry-title"><a href="https://daparrag.atlassian.net/browse/MSR-42" target="_blank">MSI445 personalizacion formularios</a></h3>
                 <div class="entry-meta">
                     <span class="meta-item"><span class="meta-label">Informador</span>Alejandro Antonio Flores Lagos</span>
@@ -442,7 +544,7 @@
                     <span class="tag tag-type">Tarea</span>
                     <span class="tag tag-priority" style="--pc: #C17817;">Medium</span>
                 </div>
-                <span class="status" style="--accent: #0F7B6C;">Finalizada</span>
+                <span class="status" style="--accent: #0F7B6C;">Finalizado</span>
                 <h3 class="entry-title"><a href="https://daparrag.atlassian.net/browse/MSR-73" target="_blank">MSI470 (Plat. Hallzgos, recurrente)</a></h3>
                 <div class="entry-meta">
                     <span class="meta-item"><span class="meta-label">Informador</span>Alejandro Flores Lagos</span>
@@ -470,7 +572,7 @@
                     <span class="tag tag-type">Tarea</span>
                     <span class="tag tag-priority" style="--pc: #C17817;">Medium</span>
                 </div>
-                <span class="status" style="--accent: #0F7B6C;">Finalizada</span>
+                <span class="status" style="--accent: #0F7B6C;">Finalizado</span>
                 <h3 class="entry-title"><a href="https://daparrag.atlassian.net/browse/MSR-95" target="_blank">RI-011 Mensaje de error carga programacion</a></h3>
                 <div class="entry-meta">
                     <span class="meta-item"><span class="meta-label">Informador</span>Alejandro Flores Lagos</span>
@@ -527,7 +629,7 @@
                     <span class="tag tag-type">Tarea</span>
                     <span class="tag tag-priority" style="--pc: #C17817;">Medium</span>
                 </div>
-                <span class="status" style="--accent: #0F7B6C;">Finalizada</span>
+                <span class="status" style="--accent: #0F7B6C;">Finalizado          </span>
                 <h3 class="entry-title"><a href="https://daparrag.atlassian.net/browse/MSR-78" target="_blank">En Crear modulo, asignar automáticamente campos Contrato R&amp;Q y eliminar de vista de formulario.</a></h3>
                 <div class="entry-meta">
                     <span class="meta-item"><span class="meta-label">Informador</span>Alejandro Flores Lagos</span>
@@ -692,7 +794,62 @@
 
 <footer>· un hito representativo por mes · orden cronológico por fecha de creación</footer>
 
+<div class="video-modal" id="videoModal" aria-hidden="true">
+    <div class="video-panel" role="dialog" aria-modal="true" aria-label="Reproductor de video del rediseño UI UX">
+        <div class="video-header">
+            <h2 class="video-title">Rediseño UI UX</h2>
+            <button class="video-close" type="button" id="closeVideo" aria-label="Cerrar video">×</button>
+        </div>
+        <div class="video-shell">
+            <video id="videoPlayer" controls preload="metadata" playsinline>
+                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+                Tu navegador no soporta la reproducción de video.
+            </video>
+        </div>
+    </div>
+</div>
+
 <script>
+const videoModal = document.getElementById('videoModal');
+const videoPlayer = document.getElementById('videoPlayer');
+const videoTrigger = document.getElementById('videoTrigger');
+const closeVideo = document.getElementById('closeVideo');
+
+function openVideoModal() {
+    videoModal.classList.add('open');
+    videoModal.setAttribute('aria-hidden', 'false');
+    videoPlayer.play();
+}
+
+function closeVideoModal() {
+    videoModal.classList.remove('open');
+    videoModal.setAttribute('aria-hidden', 'true');
+    videoPlayer.pause();
+    videoPlayer.currentTime = 0;
+}
+
+if (videoTrigger) {
+    videoTrigger.addEventListener('click', openVideoModal);
+}
+
+if (closeVideo) {
+    closeVideo.addEventListener('click', closeVideoModal);
+}
+
+if (videoModal) {
+    videoModal.addEventListener('click', (event) => {
+        if (event.target === videoModal) {
+            closeVideoModal();
+        }
+    });
+}
+
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && videoModal && videoModal.classList.contains('open')) {
+        closeVideoModal();
+    }
+});
+
 // Tooltip functionality
 const tooltip = document.createElement('div');
 tooltip.className = 'tooltip';
