@@ -470,7 +470,7 @@
                     <time class="is-2026">act. · 15/may/26</time>
                 </div>
                 <div class="video-actions">
-                    <button class="video-trigger" type="button" id="videoTrigger">Ver video</button>
+                    <button class="video-trigger" type="button" data-video-id="uiUxDesign">Ver video</button>
                 </div>
             </div>
         </article>
@@ -500,6 +500,9 @@
                     <time class="">creada · 04/oct/25</time>
                     <time class="is-2026">act. · 10/abr/26</time>
                 </div>
+                <div class="video-actions">
+                    <button class="video-trigger" type="button" data-video-id="msiEditor">Ver video</button>
+                </div>
             </div>
         </article>
         </div>
@@ -527,6 +530,9 @@
                 <div class="entry-dates">
                     <time class="">creada · 17/nov/25</time>
                     <time class="is-2026">act. · 20/may/26</time>
+                </div>
+                <div class="video-actions">
+                    <button class="video-trigger" type="button" id="videoTrigger">Ver video</button>
                 </div>
             </div>
         </article>
@@ -795,28 +801,48 @@
 
 <footer>· un hito representativo por mes · orden cronológico por fecha de creación</footer>
 
+<!-- Video Modal -->
 <div class="video-modal" id="videoModal" aria-hidden="true">
-    <div class="video-panel" role="dialog" aria-modal="true" aria-label="Reproductor de video del rediseño UI UX">
+    <div class="video-panel" role="dialog" aria-modal="true">
         <div class="video-header">
-            <h2 class="video-title">Rediseño UI UX</h2>
+            <h2 class="video-title" id="videoTitle">Reproductor de Video</h2>
             <button class="video-close" type="button" id="closeVideo" aria-label="Cerrar video">×</button>
         </div>
         <div class="video-shell">
             <video id="videoPlayer" controls preload="metadata" playsinline>
-                <source src="Diseño sin título.mp4" type="video/mp4">
                 Tu navegador no soporta la reproducción de video.
             </video>
         </div>
     </div>
 </div>
 
+<!-- Video Definitions -->
 <script>
+const VIDEOS = {
+    uiUxDesign: {
+        title: 'Rediseño UI UX',
+        src: 'Diseño sin título.mp4'
+    },
+    msiEditor: {
+        title: 'Editor HTML',
+        src: 'plantillaInformes.mp4'
+    }
+};
+
 const videoModal = document.getElementById('videoModal');
 const videoPlayer = document.getElementById('videoPlayer');
-const videoTrigger = document.getElementById('videoTrigger');
+const videoTitle = document.getElementById('videoTitle');
 const closeVideo = document.getElementById('closeVideo');
 
-function openVideoModal() {
+function openVideoModal(videoId) {
+    const video = VIDEOS[videoId];
+    if (!video) {
+        console.warn(`Video not found: ${videoId}`);
+        return;
+    }
+    
+    videoTitle.textContent = video.title;
+    videoPlayer.src = video.src;
     videoModal.classList.add('open');
     videoModal.setAttribute('aria-hidden', 'false');
     videoPlayer.play();
@@ -829,9 +855,13 @@ function closeVideoModal() {
     videoPlayer.currentTime = 0;
 }
 
-if (videoTrigger) {
-    videoTrigger.addEventListener('click', openVideoModal);
-}
+// Agregar listeners a todos los botones de video
+document.querySelectorAll('.video-trigger').forEach(button => {
+    button.addEventListener('click', (e) => {
+        const videoId = button.getAttribute('data-video-id');
+        openVideoModal(videoId);
+    });
+});
 
 if (closeVideo) {
     closeVideo.addEventListener('click', closeVideoModal);
